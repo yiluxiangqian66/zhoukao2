@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge;chrome=1">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/handlebars-v4.0.11.js"></script>
+    <script id="tep" type="text/x-handlebars-template">
+        {{#each this}}{{!一级数据}}
+        <p><i class="sq">-</i>{{name}}</p>
+        <div class="box">
+            <div class="box-children">
+                {{#each children}}{{!二级数据}}
+                <p style="margin-left:20px;"><i class="sq">-</i>{{name}}</p>
+                <div class="box-file">
+                    {{#each children}}{{!三级数据}}
+                    <p style="margin-left:30px;"><i class="sq">-</i>{{name}}</p>
+                    <div class="box-files">
+                        <p style="margin-left:44px"><i class="sq">-</i>{{name}}</p>
+                        <div class="filess">
+                            {{#each children}}
+                            <p style="margin-left:56px">{{name}}</p>
+                            {{/each }}
+                        </div>
+                    </div>
+                    {{/each}}{{!三级数据}}
+                </div>
+                {{/each}}{{!二级数据}}
+            </div>
+
+        </div>
+        {{/each}}{{!一级数据}}
+    </script>
+</head>
+
+<body>
+    <div class="wrap"></div>
+</body>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script>
+    $.ajax({
+            url: '/getdata',
+            dataType: 'json',
+            success: function(res) {
+                console.log(res);
+                render(res);
+            },
+            error: function(error) {
+                console.warn(error);
+            }
+        })
+        //handlebars模板渲染    
+    function render(data) {
+        var source = $('#tep').html();
+        var template = Handlebars.compile(source);
+        var html = template(data);
+        $('.wrap').html(html);
+    }
+    console.log($('p'));
+    $('.wrap').on('click', "p>i", function() {
+        $(this).parent().next().toggle();
+        if ($(this).html() === "-") {
+            $(this).html("+")
+        } else {
+            $(this).html("-")
+        };
+    })
+</script>
+
+</html>
